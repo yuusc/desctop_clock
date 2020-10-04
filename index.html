@@ -1,0 +1,414 @@
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+  <title></title>
+  <style type="text/css">
+.inputbackground {
+width:200px;
+font-size: 20pt;
+padding: 2px;
+background-color: #ffffff;
+border: 1px inset #00ccff;
+}
+</style>
+  <script>
+  var lecturenum;
+  var restnum;
+  var clockspeed=1000;
+  function clockhigh() {
+    clockspeed = 100;
+  }
+  function clocklow(){
+    clockspeed = 1000;
+  }
+  function clock() {
+    var myDay = new Array("日","月","火","水","木","金","土");
+    var now  = new Date();
+    var year = now.getFullYear(); // 年
+    var month = now.getMonth()+1; // 月
+    var date = now.getDate(); // 日
+    var day = now.getDay();
+    var hour = now.getHours(); // 時
+    var min  = now.getMinutes(); // 分
+    var sec  = now.getSeconds(); // 秒
+
+    // 数値が1桁の場合、頭に0を付けて2桁で表示する指定
+    if(hour < 10) { hour = "0" + hour; }
+    if(min < 10) { min = "0" + min; }
+    if(sec < 10) { sec = "0" + sec; }
+    // フォーマット②
+    var clock2 = year + '年' + month + '月' + date + '日' + '（' + myDay[day] + '曜日）'  + hour + '時' + min + '分' + sec + '秒';
+
+    document . getElementById( 'clock' ) . innerHTML= clock2 . toLocaleString();
+
+    // 1000ミリ秒ごとに処理を実行
+    window . setTimeout( "clock()", clockspeed);
+  }
+  function schedule(){
+    var now  = new Date();
+    var hour = now.getHours(); // 時
+    var min  = now.getMinutes(); // 分
+    var message;
+
+    var time = hour*100+min;
+    if(time >=400 && time<840){
+      message = "授業開始前です．準備をしましょう．1限は8:40から開始されます．";
+      restnum = 1;
+      lecturenum =8;
+    }else　if (time >=840 && time<= 955) {
+      message = "1限目";
+      restnum = 0;
+      lecturenum =1;
+    }else if (time >955 && time< 1010) {
+      message = "1,2限間休憩";
+      restnum = 2;
+      lecturenum =8;
+    }else if (time >=1010 && time<= 1125) {
+      message = "2限目";
+      restnum = 0;
+      lecturenum =2;
+    }else if (time >1125 && time< 1215) {
+      message = "昼休み";
+      restnum = 3;
+      lecturenum =8;
+    }else if (time >=1215 && time<= 1330) {
+      message = "3限目";
+      restnum = 0;
+      lecturenum =3;
+    }else if (time >1330 && time< 1345) {
+      message = "3,4限間休憩";
+      restnum = 4;
+      lecturenum =8;
+    }else if (time >=1345 && time<= 1500) {
+      message = "4限目";
+      lecturenum =4;
+      restnum = 0;
+    }else if (time >1500 && time< 1515) {
+      message = "4,5限間休憩";
+      restnum = 5
+      lecturenum =8;
+    }else if (time >=1515 && time<= 1630) {
+      message = "5限目";
+      lecturenum =5;
+      restnum = 0;
+    }else if (time >1630 && time< 1645) {
+      message = "5,6限間休憩";
+      restnum = 6;
+      lecturenum =8;
+    }else if (time >=1645 && time<= 1800) {
+      message = "6限目";
+      lecturenum =6;
+      restnum = 0;
+    }else if (time >1800 && time< 2000) {
+      message = "授業終了です．一日お疲れ様でした！";
+      lecturenum = 7;
+      restnum = 0;
+    }else{
+      message = "授業時間外です";
+      lecturenum = 0;
+      restnum = 0;
+    }
+    document . getElementById( 'schedule' ) . innerHTML= message . toLocaleString();
+    window . setTimeout( "schedule()", clockspeed);
+  }
+  function lecture() {
+  //  lecture = 0;    //デバッグ用
+    var now  = new Date();
+    var hour = now.getHours(); // 時
+    var min  = now.getMinutes(); // 分
+    var left;
+    var time = hour*60+min;
+    var message2;
+    var message3 = null;
+    if (lecturenum>=1 && lecturenum<=7) {
+      if (lecturenum==1) {
+        left = 9*60+55-time;
+        message3="";
+      }else if (lecturenum==2) {
+        left = 11*60+25-time;
+        message3="";
+      }else if (lecturenum==3) {
+        left = 13*60+30-time;
+        message3="";
+      }else if (lecturenum==4) {
+        left = 15*60-time;
+        message3="";
+      }else if (lecturenum==5) {
+        left = 16*60+30-time;
+        message3="";
+      }else if (lecturenum==6) {
+        left = 18*60-time;
+        message3="";
+      }else if (lecturenum==7) {
+        left = 0;
+        message3="．本日の授業は終了しました．";
+      }else{
+        message3 = "エラーが発生しました．リロードしてください．"
+      }
+      message2 = lecturenum+'限目終了まで残り'+left+'分です'+message3;
+    }else if (lecturenum==8) {
+      message2="";
+    }else{
+      message2 = "おやすみなさい";
+    }
+    document . getElementById( 'lecture' ) . innerHTML= message2 . toLocaleString();
+    window . setTimeout( "lecture()", 1000);
+  }
+  function rest() {
+  //  rest = 0;    //デバッグ用
+    var now  = new Date();
+    var hour = now.getHours(); // 時
+    var min  = now.getMinutes(); // 分
+    var left;
+    var time = hour*60+min;
+    var message2;
+    if (restnum>=2 && restnum<=6) {
+      if (restnum==2) {
+        left = 10*60+10-time;
+      }else if (restnum==3) {
+        left = 12*60+15-time;
+      }else if (restnum==4) {
+        left = 13*60+45-time;
+      }else if (restnum==5) {
+        left = 15*60+15-time;
+      }else if (restnum==6) {
+        left = 16*60+45-time;
+      }else{
+        message2='error';
+      }
+      message2 = '休憩時間終了まで残り'+left+'分です';
+    }else if (lecturenum==1) {
+      left = 8*60+40-time;
+      message2 = '授業開始まで残り'+left+'分です';
+    }else{
+      message2 = " ";
+    }
+    document . getElementById( 'rest' ) . innerHTML= message2 . toLocaleString();
+    window . setTimeout( "rest()", 1000);
+  }
+  window . addEventListener('load', clock);
+  window . addEventListener('load', schedule);
+  window . addEventListener('load', lecture);
+  window . addEventListener('load', rest);
+
+
+  //タイマー
+  var timer1; //タイマーを格納する変数（タイマーID）の宣言
+
+
+  //カウントダウン関数を1000ミリ秒毎に呼び出す関数
+  function cntStart()
+  {
+    document.timer.elements[2].disabled=true;
+    timer1=setInterval("countDown()",1000);
+  }
+
+  //タイマー停止関数
+  function cntStop()
+  {
+    document.timer.elements[2].disabled=false;
+    clearInterval(timer1);
+  }
+  function hankaku2Zenkaku(str) {
+    return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+}
+  //カウントダウン関数
+  function countDown()
+  {
+    var min=document.timer.elements[0].value;
+    var sec=document.timer.elements[1].value;
+    min = hankaku2Zenkaku(min);
+    sec = hankaku2Zenkaku(sec);
+
+    if( (min=="") && (sec=="") )
+    {
+      alert("時刻を設定してください！");
+      reSet();
+    }
+    else
+    {
+      if (min=="") min=0;
+      min=parseInt(min);
+
+      if (sec=="") sec=0;
+      sec=parseInt(sec);
+
+      tmWrite(min*60+sec-1);
+    }
+  }
+
+  //残り時間を書き出す関数
+  function tmWrite(int)
+  {
+    int=parseInt(int);
+
+    if (int<=0)
+    {
+      reSet();
+      alert("時間です！");
+    }
+    else
+    {
+      //残り分数はintを60で割って切り捨てる
+      document.timer.elements[0].value=Math.floor(int/60);
+      //残り秒数はintを60で割った余り
+      document.timer.elements[1].value=int % 60;
+    }
+  }
+
+  //フォームを初期状態に戻す（リセット）関数
+  function reSet()
+  {
+    document.timer.elements[0].value="0";
+    document.timer.elements[1].value="0";
+    document.timer.elements[2].disabled=false;
+    clearInterval(timer1);
+  }
+
+  var mode;                   // ストップウォッチのモード RUN/STOP
+  var startTime;              // スタートした時刻
+  var nowTime;                // ストップした時刻
+  var addTime;                // 経過時間（ストップウォッチ再開時に加算する）
+  var millisec;                   // 1000分の1秒
+  var sec100;                 // 100分の1秒
+  var sec;
+  var min;                        // 分
+  var hour;                   // 時
+  var gmt;                        // タイムゾーンのオフセット値
+  //  例）GMT+0900 なら 標準時より9時間後をさしているので-9する
+  var timerId;                    // タイマー
+  var RUN = 1;                // 動作中
+  var STOP = 0;               // 停止中
+  function resetStopWatch(){
+    mode = STOP;
+    addTime = 0;
+    millisec = sec100 = sec = min = hour = 0;
+    gmt = new Date().getTimezoneOffset() / 60;  // 戻り値は分のため60で割る
+    document.getElementById("time").innerHTML = "00:00:00.00";
+  }
+  function startStop(){
+    switch(mode){
+      case STOP:      // スタートを押したとき
+      mode = RUN;
+      timerId = setTimeout(runStopWatch, 10);
+      document.getElementById("btnClear").disabled = "true";  // クリアボタンを使用不可
+      document.getElementById("btnStart").innerHTML = "ストップ";
+      // スタート時刻を設定（ストップウォッチが進んでいれば加算）
+      startTime = new Date().getTime();
+      addTime = (hour*60*60*1000 + min*60*1000 + sec * 1000 + millisec);
+      startTime -= addTime;
+      break;
+
+      case RUN:
+      mode = STOP;
+      clearTimeout(timerId);
+      //          nowTime = new Date().getTime();
+      document.getElementById("btnStart").innerHTML = "スタート";
+      document.getElementById("btnClear").disabled = "";      // クリアボタンを使用可
+      drawTime();
+    }
+  }
+
+  //時間表示
+
+  function drawTime(){
+    var strTime = "";
+    var strSec100, strSec, strMin, strHour;
+
+    // 数値を文字に変換及び2桁表示設定
+    strSec100 = "" + sec100;
+    if ( strSec100.length < 2){
+      strSec100 = "0" + strSec100;
+    }
+    strSec = "" + sec;
+    if ( strSec.length < 2){
+      strSec = "0" + strSec;
+    }
+    strMin = "" + min;
+    if ( strMin.length < 2){
+      strMin = "0" + strMin;
+    }
+    strHour = "" + hour;
+    if ( strHour.length < 2){
+      strHour = "0" + strHour;
+    }
+    // 表示形式を設定
+    strTime = strHour + ":" + strMin + ":" + strSec + "." + strSec100;
+    document.getElementById("time").innerHTML = strTime;
+  }
+  function runStopWatch(){
+    // スタートからの差分をとる
+    nowTime = new Date().getTime();
+    diff = new Date(nowTime - startTime);
+    // ミリ秒、100分の1秒、秒、分、時を設定
+    millisec = diff.getMilliseconds();
+    sec100 = Math.floor(millisec / 10);
+    sec = diff.getSeconds();
+    min = diff.getMinutes();
+    hour = diff.getHours() + gmt;   // タイムゾーンのオフセットを考慮する
+
+    drawTime();         // 時間表示
+    timerId = setTimeout(runStopWatch, 10);
+  }
+
+
+  //実行時の処理
+  window.onload = function(){
+    resetStopWatch();
+  }
+  function utc() {
+    var dt = new Date();
+    var g = dt.toUTCString();
+    document . getElementById( 'utc' ) . innerHTML= g . toLocaleString();
+    // 1000ミリ秒ごとに処理を実行
+    window . setTimeout( "utc()", 100);
+  }
+  window . addEventListener('load', utc);
+</script>
+</head>
+
+<body>
+  <div id="clock" style="font-size:50pt;text-align: center;"></div>
+  <br>
+  <div id="schedule" style="font-size:50pt;text-align: center;color:red;"></div>
+  <div id="lecture" style="font-size:20pt;text-align: center;"></div>
+  <div id="rest" style="font-size:20pt;text-align: center;"></div>
+  <br>
+  <form name="timer" >
+    <font size="5">タイマー</font><br>
+    <input type="number" min="0" value=""  placeholder="min" class="inputbackground">分
+    <input type="number" min="0" value=""  placeholder="sec" class="inputbackground">秒<br>
+    <input type="button" value="スタート" onclick="cntStart()">
+    <input type="button" value="ストップ" onclick="cntStop()">
+  </form>
+  <br>
+  <form name="form1" id="form1">
+    <font size="5">ストップウォッチ</font>
+    <p id="time" style="font-size:20pt">
+      00:00:00.00
+    </p>
+    <button type="button" id="btnStart" onclick="startStop()">
+      スタート
+    </button>
+    <button type="button" id="btnClear" onclick="resetStopWatch()">
+      クリア
+    </button>
+  </form>
+  <br>
+  <form name="utcclock">
+  <font size="5">UTC時刻</font><br>
+  <div id="utc" style="font-size:20pt;"></div>(上の時計よりも正確)
+  <input type="button" value="低遅延" onclick="clockhigh();">
+    <input type="button" value="低負荷" onclick="clocklow();">
+    <br>
+    低遅延モードでは100msごとに上部の時計を更新するため，時計は正確に作動しますがPCの性能によりストップウォッチなどと併用すると認識できる範囲の遅延が発生する恐れがあります．
+    <br>
+    低負荷モードでは1000msごとに上部の時計を更新するため，1~2秒程度の遅延が発生する可能性がありますが，PCへの負荷は少なめです．上部の時計とUTC時刻にずれが発生しますがこれは仕様です．UTC時刻のほうが正確です．
+  </form>
+</body>
+
+</html>
